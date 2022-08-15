@@ -2,6 +2,7 @@ div.side { display: none; }
 div.thing { display: none; } 
 section.infobar { display: none !important; }
 .email-collection-banner { display: none !important; }
+.NERPageMarker { display: none !important; }
 /* div.nav-buttons { display: none; } */
 
 div.content {
