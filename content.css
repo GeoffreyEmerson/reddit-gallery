@@ -13,26 +13,50 @@ div.content {
 .grid-container {
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   /* grid-template-columns: repeat(auto-fill, max-content);  */
   grid-template-rows: repeat(auto-fill, max-content);  
   margin-bottom: 1em;
+}
+
+.content a:link,.content a:active,.content a:visited,.content a:focus,.content a:hover {
+  text-decoration: none !important;
+  color: white;
+
+}
+
+.gallery-item {
+  background-color: black;
+  outline: 1px solid rgb(125, 125, 125);
+}
+
+.gallery-item-details {
+  margin-top: 0;
+  padding: 5px;
+  padding-top: 7px;
+  color: white;
 }
 
 .gallery-text-item {
   padding: 5px;
 }
 
+.gallery-item-video {
+  padding: 0;
+  margin: 0;
+}
+
 .gallery-item-title {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   margin: 0;
   padding: 0;
-  text-align: center;
+  text-align: left;
   text-decoration: none;
-  color: #000;
+  text-overflow: ellipsis;
+  color: white;
   display: block;
-  overflow-wrap: break-word;
+  /* overflow-wrap: break-word; */
 }
 
 .gallery-item-timestamp {
@@ -63,3 +87,4 @@ video {
   width: 100%;
   animation-play-state: paused;
 }
+

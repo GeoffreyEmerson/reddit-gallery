@@ -53,67 +53,7 @@ function createGalleryItem(postData) {
   
     linkDict[dataUrl] = true;
 
-    const childElementData = [
-      {
-        tag: 'p',
-        className: 'gallery-item-title',
-        children: [
-          {
-            tag: 'a',
-            href: dataUrl,
-            target: '_blank',
-            text: title,
-          }
-        ]
-      },
-      {
-        tag: 'p',
-        className: 'gallery-item-subreddit',
-        children: [
-          {
-            tag: 'text',
-            text: 'on ',
-          },
-          {
-            tag: 'a',
-            href: subredditUrl,
-            target: '_blank',
-            text: subredditPrefixed,
-          }
-        ]
-      },
-      {
-        tag: 'p',
-        className: 'gallery-item-author',
-        children: [
-          {
-            tag: 'text',
-            text: 'by ',
-          },
-          {
-            tag: 'b',
-          },
-          {
-            tag: 'a',
-            href: postAuthorUrl + '/submitted',
-            target: '_blank',
-            text: author,
-          }
-        ]
-      },
-      {
-        tag: 'p',
-        className: 'gallery-item-comments',
-        children: [
-          {
-            tag: 'a',
-            href: commentUrl,
-            target: '_blank',
-            text: `at ${(new Date(parseInt(timestamp))).toLocaleString()}`,
-          }
-        ]
-      }
-    ]
+    const childElementData = []
 
   
     /**
@@ -198,19 +138,92 @@ function createGalleryItem(postData) {
           }
         ]
       },
+      // {
+      //   tag: 'p',
+      //   className: 'gallery-item-domain',
+      //   children: [
+      //     {
+      //       tag: 'a',
+      //       href: dataUrl || dataPermalink,
+      //       target: '_blank',
+      //       text: dataDomain,
+      //     }
+      //   ]
+      // }
+      );
+    }
+
+    /**
+     * Add the title and details
+     */
+
+    childElementData.push(
       {
-        tag: 'p',
-        className: 'gallery-item-domain',
+        tag: 'div',
+        className: 'gallery-item-details',
         children: [
           {
-            tag: 'a',
-            href: dataUrl || dataPermalink,
-            target: '_blank',
-            text: dataDomain,
+            tag: 'p',
+            className: 'gallery-item-title',
+            children: [
+              {
+                tag: 'a',
+                href: dataUrl,
+                target: '_blank',
+                text: title,
+              }
+            ]
+          },
+          {
+            tag: 'p',
+            className: 'gallery-item-subreddit',
+            children: [
+              {
+                tag: 'text',
+                text: 'on ',
+              },
+              {
+                tag: 'a',
+                href: subredditUrl,
+                target: '_blank',
+                text: subredditPrefixed,
+              }
+            ]
+          },
+          {
+            tag: 'p',
+            className: 'gallery-item-author',
+            children: [
+              {
+                tag: 'text',
+                text: 'by ',
+              },
+              {
+                tag: 'b',
+              },
+              {
+                tag: 'a',
+                href: postAuthorUrl + '/submitted',
+                target: '_blank',
+                text: author,
+              }
+            ]
+          },
+          {
+            tag: 'p',
+            className: 'gallery-item-comments',
+            children: [
+              {
+                tag: 'a',
+                href: commentUrl,
+                target: '_blank',
+                text: `at ${(new Date(parseInt(timestamp))).toLocaleString()}`,
+              }
+            ]
           }
         ]
-      });
-    }
+      }
+    );
 
     
     /**
@@ -220,7 +233,7 @@ function createGalleryItem(postData) {
     const galleryItemData = [
       {
         tag: 'div',
-        class: 'gallery-item',
+        className: 'gallery-item',
         children: childElementData
       }
     ];
