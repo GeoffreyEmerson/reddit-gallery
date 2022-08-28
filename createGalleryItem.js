@@ -68,7 +68,7 @@ function createGalleryItem(postData) {
   
     if (modifiedDataUrl?.includes(".mp4")) {
       childElementData.push({
-        tag: 'p',
+        tag: 'div',
         className: 'gallery-item-video',
         children: [
           {
@@ -100,7 +100,7 @@ function createGalleryItem(postData) {
       modifiedDataUrl?.includes(".gif")
     ) {
       childElementData.push({
-        tag: 'p',
+        tag: 'div',
         className: 'gallery-item-image',
         children: [
           {
@@ -121,7 +121,7 @@ function createGalleryItem(postData) {
       unsupported[dataDomain] = 1 + (unsupported[dataDomain] || 0);
 
       childElementData.push({
-        tag: 'p',
+        tag: 'div',
         className: 'gallery-item-thumb',
         children: [
           {
@@ -137,20 +137,7 @@ function createGalleryItem(postData) {
             ]
           }
         ]
-      },
-      // {
-      //   tag: 'p',
-      //   className: 'gallery-item-domain',
-      //   children: [
-      //     {
-      //       tag: 'a',
-      //       href: dataUrl || dataPermalink,
-      //       target: '_blank',
-      //       text: dataDomain,
-      //     }
-      //   ]
-      // }
-      );
+      });
     }
 
     /**
@@ -233,8 +220,14 @@ function createGalleryItem(postData) {
     const galleryItemData = [
       {
         tag: 'div',
-        className: 'gallery-item',
-        children: childElementData
+        className: 'gallery-item-container',
+        children: [
+          {
+            tag: 'div',
+            className: 'gallery-item',
+            children: childElementData
+          }
+        ]
       }
     ];
 
@@ -268,7 +261,9 @@ function createElements(data) {
     if (item.tag === 'text') {
       return document.createTextNode(item.text);
     }
+
     const element = document.createElement(item.tag);
+
     for (const [key, value] of Object.entries(item)) {
       if (key === 'tag') {
         continue;
@@ -283,7 +278,44 @@ function createElements(data) {
       }
       element[key] = value;
     }
+    
+    if (item.tag === 'video') {
+      element.addEventListener('loadeddata', function({target}) {
+        try {
+          const widthRatio = Math.floor(target.videoWidth/target.videoHeight*10);
+          const heightRatio = Math.floor(target.videoHeight/target.videoWidth*10);
+          const galleryItemContainerElement = element.closest('.gallery-item-container');
+          addSizeToLoadedElement(galleryItemContainerElement, widthRatio, heightRatio);
+        } catch (err) {
+          console.debug('video event listener error:', err);
+        }
+      }, false);
+    }
+    
+    if ( item.tag === 'img') {
+      element.onload = function({target}) {
+        const widthRatio = Math.floor(target.naturalWidth/target.naturalHeight*10);
+        const heightRatio = Math.floor(target.naturalHeight/target.naturalWidth*10);
+        const galleryItemContainerElement = element.closest('.gallery-item-container');
+        addSizeToLoadedElement(galleryItemContainerElement, widthRatio, heightRatio);
+      }
+
+      element.onerror = function(event) {
+        console.debug('onerror event:', event);
+        element.closest('.gallery-item-container').classList.add('visible');
+      }
+    }
 
     return element;
   })
+}
+
+function addSizeToLoadedElement(element, widthRatio, heightRatio) {
+  element.style.gridRow = `span ${heightRatio + 2}`;
+  if (widthRatio > 15) {
+    element.style.gridColumn = `span 20`;
+    element.style.gridRow = `span 13`;
+  }
+  
+  element?.classList.add('visible');
 }

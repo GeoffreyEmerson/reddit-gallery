@@ -8,9 +8,9 @@ try {
    */
   
   const topSiteTable = document.getElementById("siteTable")
-  const gridContainer = document.createElement("div");
-  gridContainer.className = "grid-container";
-  topSiteTable.insertBefore(gridContainer, topSiteTable.firstChild)
+  const galleryContainer = document.createElement("div");
+  galleryContainer.className = "grid-definitions";
+  topSiteTable.insertBefore(galleryContainer, topSiteTable.firstChild)
   
 
   /**
@@ -40,7 +40,7 @@ try {
           galleryItems?.forEach(galleryItem => {
             try {
               if (galleryItem?.outerHTML) {
-                gridContainer.appendChild(galleryItem)
+                galleryContainer.appendChild(galleryItem)
               };
             } catch (error) {
               console.debug("Error in collectAndDisplaySiteTableData", error);

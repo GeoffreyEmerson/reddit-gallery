@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Reddit Gallery",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Turns old reddit into an image gallery.",
  
   "permissions": [
@@ -10,7 +10,7 @@
   
   "browser_specific_settings": {
     "gecko": {
-      "id": "{246cbaf7-ed63-4de1-baec-0d132438d84b}",
+      "id": "{daf42bf7-a45e-4250-979c-91cf07434c3d}",
       "strict_min_version": "48.0"
     }
   },
