@@ -47,7 +47,6 @@ function createGalleryItem(postData) {
      * Quash dupes
      */
     if (dataUrl && linkDict[dataUrl]) {
-      console.debug('dupe mediaUrl:', dataUrl);
       return [null];
     }
   
@@ -279,32 +278,8 @@ function createElements(data) {
       element[key] = value;
     }
     
-    if (item.tag === 'video') {
-      element.addEventListener('loadeddata', function({target}) {
-        try {
-          const widthRatio = Math.floor(target.videoWidth/target.videoHeight*10);
-          const heightRatio = Math.floor(target.videoHeight/target.videoWidth*10);
-          const galleryItemContainerElement = element.closest('.gallery-item-container');
-          addSizeToLoadedElement(galleryItemContainerElement, widthRatio, heightRatio);
-        } catch (err) {
-          console.debug('video event listener error:', err);
-        }
-      }, false);
-    }
-    
-    if ( item.tag === 'img') {
-      element.onload = function({target}) {
-        const widthRatio = Math.floor(target.naturalWidth/target.naturalHeight*10);
-        const heightRatio = Math.floor(target.naturalHeight/target.naturalWidth*10);
-        const galleryItemContainerElement = element.closest('.gallery-item-container');
-        addSizeToLoadedElement(galleryItemContainerElement, widthRatio, heightRatio);
-      }
-
-      element.onerror = function(event) {
-        console.debug('onerror event:', event);
-        element.closest('.gallery-item-container').classList.add('visible');
-      }
-    }
+    if ( item.tag === 'video' ) handleVideoLoading(element);
+    if ( item.tag === 'img' ) handleImageLoading(element);
 
     return element;
   })
@@ -318,4 +293,68 @@ function addSizeToLoadedElement(element, widthRatio, heightRatio) {
   }
   
   element?.classList.add('visible');
+}
+
+function handleVideoLoading(element) {
+  element.addEventListener('loadeddata', function({target}) {
+    try {
+      const widthRatio = Math.floor(target.videoWidth/target.videoHeight*10);
+      const heightRatio = Math.floor(target.videoHeight/target.videoWidth*10);
+      const galleryItemContainerElement = element.closest('.gallery-item-container');
+      addSizeToLoadedElement(galleryItemContainerElement, widthRatio, heightRatio);
+    } catch (err) {
+      console.debug('video event listener error:', err);
+    }
+  }, false);
+}
+
+function handleImageLoading(element) {
+  if (element.src.includes('redd.it')) {
+    element.crossOrigin = "anonymous"; // needed for canvas manipulation
+  }
+
+  element.onload = function({target}) {
+    const galleryItemContainerElement = element.closest('.gallery-item-container');
+    if (element.src.includes('redd.it') && dupeImg(element)) {
+      galleryItemContainerElement.parentNode.removeChild(galleryItemContainerElement);
+    }
+    const widthRatio = Math.floor(target.naturalWidth/target.naturalHeight*10);
+    const heightRatio = Math.floor(target.naturalHeight/target.naturalWidth*10);
+    addSizeToLoadedElement(galleryItemContainerElement, widthRatio, heightRatio);
+  }
+
+  element.onerror = function(event) {
+    console.debug(`load error: ${event}`, event);
+    element.closest('.gallery-item-container').classList.add('visible');
+  }
+}
+
+const seenImgData = [];
+
+function dupeImg(img) {
+  const ext = img.src.substring(img.src.lastIndexOf('.')+1, img.src.length);
+  if (ext !== 'jpg' && ext !== 'png' && ext !== 'gif') return false;
+  
+  try {
+    let canvas = document.createElement('canvas');
+    canvas.height = img.height;
+    canvas.width = img.width;
+
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    let dataURL = canvas.toDataURL(`image/${ext}`);
+    canvas = null;
+    
+    let sample = dataURL.substring(0,100);
+    
+    if (seenImgData.includes(sample)) {
+      return true;
+    }
+
+    seenImgData.push(sample);
+    return false;
+  } catch(err) {
+    console.debug('dupe detection error:', err);
+  }
 }
