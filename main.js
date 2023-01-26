@@ -17,41 +17,35 @@ try {
    * Process posts found on page load
    */
   
-  collectAndDisplaySiteTableData(topSiteTable);
+  collectSiteTableData(topSiteTable);
 
 
   /**
    * Watch for new posts
    */
 
-  onNewPosts(topSiteTable, collectAndDisplaySiteTableData)
+  onNewPosts(topSiteTable, collectSiteTableData)
 
 
   /** 
    * Scrape Posts and display Gallery Items
   */
 
-  async function collectAndDisplaySiteTableData(element) {
+  async function collectSiteTableData(element) {
     if(element?.className?.includes("sitetable")){
-      for (const child of element.children) {
-        const data = await scrapePostData(child);
-        if (data) {
-          const galleryItems = await createGalleryItems(data);
-          galleryItems?.forEach(galleryItem => {
-            try {
-              if (galleryItem?.outerHTML) {
-                galleryContainer.appendChild(galleryItem)
-              };
-            } catch (error) {
-              console.debug("Error in collectAndDisplaySiteTableData", error);
-              
-            }
-          });
-        }
-      }
-      
-      // `unsupported` is a global variable from createGalleryItem.js
-      // console.debug('unsupported:', JSON.stringify(unsupported, null, 2));
+      element.children.forEach((childElement) => {
+        scrapePostData(childElement, createGalleryItems, displayGalleryItem);
+      });
+    }
+  }
+
+  function displayGalleryItem(galleryItem) {
+    try {
+      if (galleryItem?.outerHTML) {
+        galleryContainer.appendChild(galleryItem)
+      };
+    } catch (error) {
+      console.debug("Error in displayGalleryItem", error);
     }
   }
 } catch (err) {

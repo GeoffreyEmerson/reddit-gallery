@@ -10,22 +10,24 @@ function recognizedUrl(url) {
   return recognizedUrls.some(recognizedUrl => url.includes(recognizedUrl));
 }
 
-async function createGalleryItems(postData) {
+async function createGalleryItems(postData, displayGalleryItem) {
+  if (!postData) return;
+
   const { dataUrl, title } = postData;
   if (dataUrl?.includes('reddit.com/gallery/')) {
     const links = await getRedditGalleryIDs(dataUrl);
-    return links?.map((link, counter) => createGalleryItem({
+    links?.forEach((link, counter) => createGalleryItem({
       ...postData,
       title: `${title} (${counter + 1}/${links.length})`,
       dataUrl: link,
-    }));
+    }, displayGalleryItem));
+    return;
   }
 
-  const singleItem = createGalleryItem(postData);
-  return [singleItem];
+  createGalleryItem(postData, displayGalleryItem);
 }
 
-function createGalleryItem(postData) {
+function createGalleryItem(postData, displayGalleryItem) {
   try {
     const {
       dataUrl,
@@ -47,7 +49,7 @@ function createGalleryItem(postData) {
      * Quash dupes
      */
     if (dataUrl && linkDict[dataUrl]) {
-      return [null];
+      return;
     }
   
     linkDict[dataUrl] = true;
@@ -232,7 +234,7 @@ function createGalleryItem(postData) {
 
     const galleryItem = createElements(galleryItemData);
          
-    return galleryItem[0];
+    displayGalleryItem(galleryItem[0]);
   } catch (error) {
     console.debug('Error in createGalleryItem', error);
   }

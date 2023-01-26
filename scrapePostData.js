@@ -1,7 +1,7 @@
-function scrapePostData(element) {
+function scrapePostData(element, createGalleryItems, displayGalleryItem) {
   try {
-    if (element.className == "clearleft" 
-        || !element.className.includes("thing")
+    if (element?.className == "clearleft" 
+        || !element?.className.includes("thing")
         || element.className.includes("promoted")
     ) {
       return null;
@@ -40,7 +40,7 @@ function scrapePostData(element) {
       console.debug(`--------------------------------`);
     };
   
-    return data;
+    createGalleryItems(data, displayGalleryItem);
   } catch (error) {
     console.debug('Error in scrapePostData', error);
   }
