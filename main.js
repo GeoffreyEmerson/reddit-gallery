@@ -33,9 +33,9 @@ try {
 
   async function collectSiteTableData(element) {
     if(element?.className?.includes("sitetable")){
-      element.children.forEach((childElement) => {
+      for (const childElement of element.children) {
         scrapePostData(childElement, createGalleryItems, displayGalleryItem);
-      });
+      };
     }
   }
 
