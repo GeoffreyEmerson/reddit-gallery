@@ -1,5 +1,6 @@
 const linkDict = {};
 const unsupported = {};
+let addToGallery = () => {};
 
 function recognizedUrl(url) {
   const recognizedUrls = [
@@ -11,6 +12,7 @@ function recognizedUrl(url) {
 }
 
 async function createGalleryItems(postData, displayGalleryItem) {
+  addToGallery = displayGalleryItem;
   if (!postData) return;
 
   const { dataUrl, title } = postData;
@@ -20,14 +22,14 @@ async function createGalleryItems(postData, displayGalleryItem) {
       ...postData,
       title: `${title} (${counter + 1}/${links.length})`,
       dataUrl: link,
-    }, displayGalleryItem));
+    }));
     return;
   }
 
-  createGalleryItem(postData, displayGalleryItem);
+  createGalleryItem(postData);
 }
 
-function createGalleryItem(postData, displayGalleryItem) {
+function createGalleryItem(postData) {
   try {
     const {
       dataUrl,
@@ -42,6 +44,7 @@ function createGalleryItem(postData, displayGalleryItem) {
   
     const subredditUrl = `https://old.reddit.com/${subredditPrefixed}`;
     const postAuthorUrl = `https://old.reddit.com/user/${author}`;
+    const postAuthorWwwUrl = `https://www.reddit.com/user/${author}`;
     const commentUrl = `https://www.reddit.com${dataPermalink}`;
 
 
@@ -152,13 +155,27 @@ function createGalleryItem(postData, displayGalleryItem) {
         children: [
           {
             tag: 'p',
-            className: 'gallery-item-title',
+            className: 'gallery-item-author',
             children: [
+              // {
+              //   tag: 'text',
+              //   text: 'by ',
+              // },
+              {
+                tag: 'b',
+              },
               {
                 tag: 'a',
-                href: dataUrl,
+                href: postAuthorUrl + '/submitted',
                 target: '_blank',
-                text: title,
+                text: author,
+              },
+              {
+                tag: 'a',
+                className: 'gallery-item-author-block',
+                href: postAuthorWwwUrl,
+                target: '_blank',
+                text: ' 🚫',
               }
             ]
           },
@@ -180,25 +197,6 @@ function createGalleryItem(postData, displayGalleryItem) {
           },
           {
             tag: 'p',
-            className: 'gallery-item-author',
-            children: [
-              {
-                tag: 'text',
-                text: 'by ',
-              },
-              {
-                tag: 'b',
-              },
-              {
-                tag: 'a',
-                href: postAuthorUrl + '/submitted',
-                target: '_blank',
-                text: author,
-              }
-            ]
-          },
-          {
-            tag: 'p',
             className: 'gallery-item-comments',
             children: [
               {
@@ -208,7 +206,19 @@ function createGalleryItem(postData, displayGalleryItem) {
                 text: `at ${(new Date(parseInt(timestamp))).toLocaleString()}`,
               }
             ]
-          }
+          },
+          // {
+          //   tag: 'p',
+          //   className: 'gallery-item-title',
+          //   children: [
+          //     {
+          //       tag: 'a',
+          //       href: dataUrl,
+          //       target: '_blank',
+          //       text: title,
+          //     }
+          //   ]
+          // },
         ]
       }
     );
@@ -233,8 +243,8 @@ function createGalleryItem(postData, displayGalleryItem) {
     ];
 
     const galleryItem = createElements(galleryItemData);
-         
-    displayGalleryItem(galleryItem[0]);
+
+    // addToGallery(galleryItem[0]);
   } catch (error) {
     console.debug('Error in createGalleryItem', error);
   }
@@ -294,7 +304,10 @@ function addSizeToLoadedElement(element, widthRatio, heightRatio) {
     element.style.gridRow = `span 13`;
   }
   
-  element?.classList.add('visible');
+  addToGallery(element);
+  setTimeout(() => {
+    element?.classList.add('visible');
+  }, 100);
 }
 
 function handleVideoLoading(element) {
@@ -317,9 +330,9 @@ function handleImageLoading(element) {
 
   element.onload = function({target}) {
     const galleryItemContainerElement = element.closest('.gallery-item-container');
-    if (element.src.includes('redd.it') && dupeImg(element)) {
-      galleryItemContainerElement.parentNode.removeChild(galleryItemContainerElement);
-    }
+    // if (element.src.includes('redd.it') && dupeImg(element)) {
+    //   galleryItemContainerElement.parentNode.removeChild(galleryItemContainerElement);
+    // }
     const widthRatio = Math.floor(target.naturalWidth/target.naturalHeight*10);
     const heightRatio = Math.floor(target.naturalHeight/target.naturalWidth*10);
     addSizeToLoadedElement(galleryItemContainerElement, widthRatio, heightRatio);

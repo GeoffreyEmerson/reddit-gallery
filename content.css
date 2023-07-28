@@ -14,7 +14,7 @@ div.content {
   display: grid;
   grid-gap: 1px;
   grid-template-columns: repeat(auto-fill, 25px);
-  grid-auto-rows: 30px;
+  grid-auto-rows: 27px;
   grid-auto-flow: dense;
 }
 
@@ -58,7 +58,42 @@ div.content {
   margin: 0;
 }
 
-.gallery-item-title {
+.gallery-item-author {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  padding: 0;
+  text-align: left;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  color: white;
+  display: block;
+  /* overflow-wrap: break-word; */
+}
+
+.gallery-item-author-block {
+  display: none;
+  margin: -2px;
+}
+
+.gallery-item-author:hover .gallery-item-author-block {
+  display: inline;
+}
+
+.gallery-item-subreddit {
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  color: white;
+  display: block;
+  /* overflow-wrap: break-word; */
+}
+
+.gallery-item-comments {
   font-size: 12px;
   font-weight: bold;
   margin: 0;
