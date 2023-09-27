@@ -41,7 +41,7 @@ function createGalleryItem(postData) {
       dataDomain,
       thumbnail
     } = postData;
-  
+
     const subredditUrl = `https://old.reddit.com/${subredditPrefixed}`;
     const postAuthorUrl = `https://old.reddit.com/user/${author}`;
     const postAuthorWwwUrl = `https://www.reddit.com/user/${author}`;
@@ -54,22 +54,22 @@ function createGalleryItem(postData) {
     if (dataUrl && linkDict[dataUrl]) {
       return;
     }
-  
+
     linkDict[dataUrl] = true;
 
     const childElementData = []
 
-  
+
     /**
      * Here's where we handle different media sources
      */
-      
+
     let modifiedDataUrl = dataUrl;
-    
+
     if (dataUrl?.includes("imgur.com") && dataUrl?.includes(".gifv")) {
       modifiedDataUrl = dataUrl.replace(".gifv", ".mp4");
     }
-  
+
     if (modifiedDataUrl?.includes(".mp4")) {
       childElementData.push({
         tag: 'div',
@@ -124,13 +124,19 @@ function createGalleryItem(postData) {
     } else {
       unsupported[dataDomain] = 1 + (unsupported[dataDomain] || 0);
 
+      let modifiedDataUrl = dataUrl;
+
+      if (dataUrl?.includes("v3.redgifs.com")) {
+        modifiedDataUrl = dataUrl.replace("v3.redgifs.com", "www.redgifs.com");
+      }
+
       childElementData.push({
         tag: 'div',
         className: 'gallery-item-thumb',
         children: [
           {
             tag: 'a',
-            href: dataUrl || dataPermalink,
+            href: modifiedDataUrl || dataPermalink,
             target: '_blank',
             children: [
               {
@@ -223,11 +229,11 @@ function createGalleryItem(postData) {
       }
     );
 
-    
+
     /**
      * Turn the gallery item data into elements
      */
-  
+
     const galleryItemData = [
       {
         tag: 'div',
@@ -289,7 +295,7 @@ function createElements(data) {
       }
       element[key] = value;
     }
-    
+
     if ( item.tag === 'video' ) handleVideoLoading(element);
     if ( item.tag === 'img' ) handleImageLoading(element);
 
@@ -303,7 +309,7 @@ function addSizeToLoadedElement(element, widthRatio, heightRatio) {
     element.style.gridColumn = `span 20`;
     element.style.gridRow = `span 13`;
   }
-  
+
   addToGallery(element);
   setTimeout(() => {
     element?.classList.add('visible');
@@ -349,7 +355,7 @@ const seenImgData = [];
 function dupeImg(img) {
   const ext = img.src.substring(img.src.lastIndexOf('.')+1, img.src.length);
   if (ext !== 'jpg' && ext !== 'png' && ext !== 'gif') return false;
-  
+
   try {
     let canvas = document.createElement('canvas');
     canvas.height = img.height;
@@ -360,9 +366,9 @@ function dupeImg(img) {
 
     let dataURL = canvas.toDataURL(`image/${ext}`);
     canvas = null;
-    
+
     let sample = dataURL.substring(0,100);
-    
+
     if (seenImgData.includes(sample)) {
       return true;
     }
