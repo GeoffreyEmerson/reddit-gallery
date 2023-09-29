@@ -42,6 +42,8 @@ function createGalleryItem(postData) {
       thumbnail
     } = postData;
 
+    if (!thumbnail) return;
+
     const subredditUrl = `https://old.reddit.com/${subredditPrefixed}`;
     const postAuthorUrl = `https://old.reddit.com/user/${author}`;
     const postAuthorWwwUrl = `https://www.reddit.com/user/${author}`;
@@ -68,6 +70,10 @@ function createGalleryItem(postData) {
 
     if (dataUrl?.includes("imgur.com") && dataUrl?.includes(".gifv")) {
       modifiedDataUrl = dataUrl.replace(".gifv", ".mp4");
+    }
+
+    if (dataUrl?.includes("v3.redgifs.com")) {
+      modifiedDataUrl = dataUrl.replace("v3.redgifs.com", "www.redgifs.com");
     }
 
     if (modifiedDataUrl?.includes(".mp4")) {
@@ -103,6 +109,11 @@ function createGalleryItem(postData) {
       modifiedDataUrl?.includes(".png") ||
       modifiedDataUrl?.includes(".gif")
     ) {
+      if (modifiedDataUrl?.includes("i.redgifs.com/i/") && modifiedDataUrl?.includes(".jpg")) {
+        modifiedDataUrl = modifiedDataUrl.replace("i.redgifs.com/i/", "www.redgifs.com/watch/");
+        modifiedDataUrl = modifiedDataUrl.replace(".jpg", "");
+      }
+
       childElementData.push({
         tag: 'div',
         className: 'gallery-item-image',
@@ -123,12 +134,6 @@ function createGalleryItem(postData) {
       });
     } else {
       unsupported[dataDomain] = 1 + (unsupported[dataDomain] || 0);
-
-      let modifiedDataUrl = dataUrl;
-
-      if (dataUrl?.includes("v3.redgifs.com")) {
-        modifiedDataUrl = dataUrl.replace("v3.redgifs.com", "www.redgifs.com");
-      }
 
       childElementData.push({
         tag: 'div',
@@ -335,6 +340,10 @@ function handleImageLoading(element) {
   }
 
   element.onload = function({target}) {
+    if(target.src.includes('imgur.com') && target.height === 81 && target.width === 161) {
+      // standard size for "removed" image
+      return;
+    }
     const galleryItemContainerElement = element.closest('.gallery-item-container');
     // if (element.src.includes('redd.it') && dupeImg(element)) {
     //   galleryItemContainerElement.parentNode.removeChild(galleryItemContainerElement);
