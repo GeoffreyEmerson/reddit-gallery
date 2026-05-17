@@ -1,6 +1,6 @@
 const linkDict = {};
 const unsupported = {};
-let addToGallery = () => {};
+let addToGallery = (_element) => {};
 
 function isRecognizedUrl(url) {
   const recognizedUrls = [

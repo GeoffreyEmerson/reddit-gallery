@@ -5,7 +5,7 @@ function scrapePostData(element, createGalleryItems, displayGalleryItem) {
         || element.className.includes("promoted")
     ) {
       return null;
-    };
+    }
   
     const data = element.getAttributeNames().reduce((acc, name) => {
       return {...acc, [camelize(name)]: element.getAttribute(name)};
@@ -38,7 +38,7 @@ function scrapePostData(element, createGalleryItems, displayGalleryItem) {
       console.debug(`--------------------------------`);
       console.debug('dataLink without dataUrl:', JSON.stringify(data));
       console.debug(`--------------------------------`);
-    };
+    }
   
     createGalleryItems(data, displayGalleryItem);
   } catch (error) {

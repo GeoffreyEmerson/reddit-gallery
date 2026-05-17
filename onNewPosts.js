@@ -3,7 +3,8 @@
  */
 
 const observeDOM = (function() {
-  const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+  const win = /** @type {any} */ (window);
+  const MutationObserver = win.MutationObserver || win.WebKitMutationObserver || win.MozMutationObserver;
   return function( element, handler ){
     if( !element || element.nodeType !== 1 ) return; 
 
