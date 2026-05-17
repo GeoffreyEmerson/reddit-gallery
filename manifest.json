@@ -1,9 +1,9 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Reddit Gallery",
   "version": "0.4.7",
   "description": "Turns old reddit into an image gallery.",
-  "permissions": [
+  "host_permissions": [
     "*://old.reddit.com/*"
   ],
   "browser_specific_settings": {
@@ -36,6 +36,13 @@
     }
   ],
   "web_accessible_resources": [
-    "default.png"
+    {
+      "resources": [
+        "default.png"
+      ],
+      "matches": [
+        "*://old.reddit.com/*"
+      ]
+    }
   ]
 }
