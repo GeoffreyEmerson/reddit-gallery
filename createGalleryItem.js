@@ -2,7 +2,7 @@ const linkDict = {};
 const unsupported = {};
 let addToGallery = () => {};
 
-function recognizedUrl(url) {
+function isRecognizedUrl(url) {
   const recognizedUrls = [
     'https://i.redd.it/',
     'https://v.redd.it/',
