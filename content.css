@@ -1,5 +1,5 @@
 div.side { display: none; }
-div.thing { display: block; }
+div.thing { display: none; }
 section.infobar { display: none !important; }
 .email-collection-banner { display: none !important; }
 .NERPageMarker { display: none !important; }
@@ -11,23 +11,27 @@ div.content {
 }
 
 .grid-definitions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-gap: 1px;
+  grid-template-columns: repeat(auto-fill, 25px);
+  grid-auto-rows: 27px;
+  grid-auto-flow: dense;
 }
 
 .gallery-item-container {
-  display: block;
+  display: grid;
   opacity: 0;
   padding: 1px;
   z-index: 0;
-  width: 100%;
+  grid-column: span 10;
+  grid-row: span 10;
 }
 
 .visible {
   opacity: 1;
   transition: all 1s;
   -webkit-transition: all 1s;
+  -moz-transition: all 1s;
 }
 
 .gallery-item-container:hover {
@@ -35,12 +39,8 @@ div.content {
 }
 
 .gallery-item {
-  background-color: #222;
-  outline: 1px solid rgb(125, 125, 125);
-}
-
-.gallery-item-card:nth-child(2n) .gallery-item {
   background-color: black;
+  outline: 1px solid rgb(125, 125, 125);
 }
 
 .gallery-item-details {
@@ -112,19 +112,13 @@ div.content {
 }
 
 img {
-  /* display: block; */
-  width: min(320px, 100%);
-  max-height: 240px;
-  object-fit: contain;
-  background-color: #111;
+  object-fit: cover;
+  width: 100%;
 }
 
 video {
-  display: block;
-  width: min(320px, 100%);
-  max-height: 240px;
-  object-fit: contain;
-  background-color: #111;
+  object-fit: cover;
+  width: 100%;
   animation-play-state: paused;
 }
 

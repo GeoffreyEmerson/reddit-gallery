@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Reddit Gallery",
-  "version": "0.4.8.0",
+  "version": "0.4.8.1",
   "description": "Turns old reddit into an image gallery.",
   "incognito": "spanning",
   "host_permissions": [

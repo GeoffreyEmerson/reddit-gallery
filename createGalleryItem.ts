@@ -72,7 +72,7 @@ function createGalleryItem(postData: PostData) {
       thumbnail,
     } = postData;
 
-    // if (!thumbnail) return; // Is this applicable anymore?
+    if (!thumbnail) return; // skip text posts
 
     const subredditUrl = `https://old.reddit.com/${subredditPrefixed}`;
     const postAuthorUrl = `https://old.reddit.com/user/${author}`;
@@ -341,6 +341,10 @@ function createElements(data: GalleryNode[]) {
         element.append(...createElements(value as GalleryNode[]));
         continue;
       }
+      if (key === 'className') {
+        element.classList.add(value as string);
+        continue;
+      }
       element.setAttribute(key, String(value));
     }
 
@@ -356,13 +360,16 @@ function addSizeToLoadedElement(element: Element | null, widthRatio: number, hei
     return;
   }
 
-  element.classList.add('visible');
-  element.setAttribute('style', `grid-row: span ${heightRatio + 2};`);
+  (element as HTMLElement).style.gridRow = `span ${heightRatio + 2}`;
   if (widthRatio > 15) {
-    element.setAttribute('style', 'grid-column: span 20; grid-row: span 13;');
+    (element as HTMLElement).style.gridColumn = `span 20`;
+    (element as HTMLElement).style.gridRow = `span 13`;
   }
 
   addToGallery(element);
+  setTimeout(() => {
+    element?.classList.add('visible');
+  }, 100);
 }
 
 function handleVideoLoading(element: HTMLVideoElement) {
@@ -387,6 +394,7 @@ async function fetchImageManually (element: HTMLImageElement, item: GalleryNode)
       throw new Error(`fetch failed with status ${response.status}`);
     }
     const blob = await response.blob();
+    // handleImageLoading(element, item);
     element.src = URL.createObjectURL(blob);
   } catch (error) {
     console.debug('[Reddit-Gallery] fetch-based image load failed:', error);
@@ -410,17 +418,17 @@ function handleImageLoading(element: HTMLImageElement, item: GalleryNode) {
   };
 
   element.onerror = function(event) {
-    const galleryItemContainerElement = element.closest('div');
-    if (galleryItemContainerElement) {
-      const failMessage = document.createElement('p');
-      failMessage.className = 'gallery-item-comments';
-      const errorType = event && typeof event === 'object' && 'type' in event ? String(event.type) : 'unknown error';
-      failMessage.textContent = `image load failed: ${errorType}`;
-      galleryItemContainerElement.appendChild(failMessage);
-      galleryItemContainerElement.classList.add('visible');
-    }
+    // const galleryItemContainerElement = element.closest('div');
+    // if (galleryItemContainerElement) {
+    //   const failMessage = document.createElement('p');
+    //   failMessage.classList.add('gallery-item-comments');
+    //   const errorType = event && typeof event === 'object' && 'type' in event ? String(event.type) : 'unknown error';
+    //   failMessage.textContent = `image load failed: ${errorType}`;
+    //   galleryItemContainerElement.appendChild(failMessage);
+    //   galleryItemContainerElement.classList.add('visible');
+    // }
     console.debug(`[Reddit-Gallery] image load failed:`, item);
-    console.debug(`[Reddit-Gallery] error displayed: ${!!galleryItemContainerElement}`);
+    // console.debug(`[Reddit-Gallery] error displayed: ${!!galleryItemContainerElement}`);
     console.debug(`[Reddit-Gallery] error event:`, event);
 
     fetchImageManually(element, item);
