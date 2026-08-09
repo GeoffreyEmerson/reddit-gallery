@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
+    "allowJs": false,
     "noEmit": true,
     "target": "ES2022",
     "module": "ESNext",
@@ -10,7 +9,7 @@
     "skipLibCheck": true
   },
   "include": [
-    "*.js",
+    "*.ts",
     "*.d.ts"
   ],
   "exclude": [

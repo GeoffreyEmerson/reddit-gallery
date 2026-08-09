@@ -4,14 +4,17 @@
   "private": true,
   "description": "Firefox addon that turns old reddit posts into an image gallery.",
   "scripts": {
-    "lint": "eslint . --ext .js",
-    "fix": "eslint . --ext .js --fix",
+    "lint": "eslint . --ext .js,.ts",
+    "fix": "eslint . --ext .js,.ts --fix",
     "typecheck": "tsc --noEmit",
-    "build": "web-ext build"
+    "test": "pnpm typecheck",
+    "build:ts": "rm -rf dist && tsc --noEmit false --outDir dist --rootDir . --module ESNext --target ES2022 --lib DOM,ES2022 --skipLibCheck",
+    "build": "pnpm build:ts && web-ext build --overwrite-dest"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^8.57.1",
     "eslint": "^8.57.1",
     "typescript": "^5.6.3",
-    "web-ext": "^8.2.0"
+    "web-ext": "^10.5.0"
   }
 }

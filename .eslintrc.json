@@ -7,12 +7,17 @@
   "extends": [
     "eslint:recommended"
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "script"
   },
   "globals": {
-    "browser": "readonly"
+    "browser": "readonly",
+    "MutationObserver": "readonly",
+    "MutationRecord": "readonly",
+    "MutationCallback": "readonly",
+    "EventListener": "readonly"
   },
   "ignorePatterns": [
     "web-ext-artifacts/**"
