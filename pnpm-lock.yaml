@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@types/firefox-webext-browser':
+        specifier: 143.0.0
+        version: 143.0.0
       '@typescript-eslint/parser':
         specifier: ^8.57.1
         version: 8.65.0(eslint@8.57.1)(typescript@5.9.3)
@@ -162,6 +165,9 @@ packages:
 
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
+
+  '@types/firefox-webext-browser@143.0.0':
+    resolution: {integrity: sha512-865dYKMOP0CllFyHmgXV4IQgVL51OSQQCwSoihQ17EwugePKFSAZRc0EI+y7Ly4q7j5KyURlA7LgRpFieO4JOw==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -1564,6 +1570,8 @@ snapshots:
       config-chain: 1.1.13
 
   '@types/estree@1.0.9': {}
+
+  '@types/firefox-webext-browser@143.0.0': {}
 
   '@types/json-schema@7.0.15': {}
 

@@ -43,7 +43,7 @@ function scrapePostData(
       console.debug(`[Reddit-Gallery] --------------------------------`);
     }
 
-    console.debug('[Reddit-Gallery] scrapePostData data:', data);
+    // console.debug('[Reddit-Gallery] scrapePostData data:', data);
 
     createGalleryItems(data, displayGalleryItem);
   } catch (error) {

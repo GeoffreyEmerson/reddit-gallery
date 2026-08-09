@@ -6,7 +6,8 @@
     "module": "ESNext",
     "lib": ["DOM", "ES2022"],
     "strict": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["firefox-webext-browser"]
   },
   "include": [
     "*.ts",

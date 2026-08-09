@@ -1,16 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Reddit Gallery",
-  "version": "0.4.7",
+  "version": "0.4.8.0",
   "description": "Turns old reddit into an image gallery.",
   "incognito": "spanning",
   "host_permissions": [
-    "*://old.reddit.com/*"
+    "*://old.reddit.com/*",
+    "*://i.redd.it/*"
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "{fd1b33ac-2700-11ed-a261-0242ac120002}",
-      "strict_min_version": "128.0"
+      "id": "{daf42bf7-a45e-4250-979c-91cf07434c3d}",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "content_scripts": [

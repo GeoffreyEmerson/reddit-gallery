@@ -227,26 +227,26 @@ function createGalleryItem(postData: PostData) {
         },
 
         // DEBUG LINES
-        {
-          tag: 'p',
-          className: 'gallery-item-comments',
-          children: [{tag: 'text', text: `url: ${postData.dataUrl}`}]
-        },
-        {
-          tag: 'p',
-          className: 'gallery-item-comments',
-          children: [{tag: 'text', text: `permalink: ${postData.dataPermalink}`}]
-        },
-        {
-          tag: 'p',
-          className: 'gallery-item-comments',
-          children: [{tag: 'text', text: `domain: ${postData.dataDomain}`}]
-        },
-        {
-          tag: 'p',
-          className: 'gallery-item-comments',
-          children: [{tag: 'text', text: `thumbnail: ${postData.thumbnail}`}]
-        },
+        // {
+        //   tag: 'p',
+        //   className: 'gallery-item-comments',
+        //   children: [{tag: 'text', text: `url: ${postData.dataUrl}`}]
+        // },
+        // {
+        //   tag: 'p',
+        //   className: 'gallery-item-comments',
+        //   children: [{tag: 'text', text: `permalink: ${postData.dataPermalink}`}]
+        // },
+        // {
+        //   tag: 'p',
+        //   className: 'gallery-item-comments',
+        //   children: [{tag: 'text', text: `domain: ${postData.dataDomain}`}]
+        // },
+        // {
+        //   tag: 'p',
+        //   className: 'gallery-item-comments',
+        //   children: [{tag: 'text', text: `thumbnail: ${postData.thumbnail}`}]
+        // },
       ]
     });
 
@@ -379,11 +379,25 @@ function handleVideoLoading(element: HTMLVideoElement) {
   }, false);
 }
 
-function handleImageLoading(element: HTMLImageElement, item: GalleryNode) {
-  if (element.src.includes('redd.it')) {
-    element.crossOrigin = 'anonymous';
+async function fetchImageManually (element: HTMLImageElement, item: GalleryNode) {
+  try {
+    const src = element.getAttribute('src') || '';
+    const response = await fetch(src, { mode: 'cors' });
+    if (!response.ok) {
+      throw new Error(`fetch failed with status ${response.status}`);
+    }
+    const blob = await response.blob();
+    element.src = URL.createObjectURL(blob);
+  } catch (error) {
+    console.debug('[Reddit-Gallery] fetch-based image load failed:', error);
+    const fallbackSrc = item.meta?.thumbnail || browser.runtime.getURL('default.png');
+    if (element.src !== fallbackSrc) {
+      element.src = fallbackSrc;
+    }
   }
+};
 
+function handleImageLoading(element: HTMLImageElement, item: GalleryNode) {
   element.onload = function({ target }) {
     const imageTarget = target as HTMLImageElement;
     if (imageTarget.src.includes('imgur.com') && imageTarget.height === 81 && imageTarget.width === 161) {
@@ -396,7 +410,7 @@ function handleImageLoading(element: HTMLImageElement, item: GalleryNode) {
   };
 
   element.onerror = function(event) {
-    const galleryItemContainerElement = element.closest('.gallery-item-container');
+    const galleryItemContainerElement = element.closest('div');
     if (galleryItemContainerElement) {
       const failMessage = document.createElement('p');
       failMessage.className = 'gallery-item-comments';
@@ -408,11 +422,13 @@ function handleImageLoading(element: HTMLImageElement, item: GalleryNode) {
     console.debug(`[Reddit-Gallery] image load failed:`, item);
     console.debug(`[Reddit-Gallery] error displayed: ${!!galleryItemContainerElement}`);
     console.debug(`[Reddit-Gallery] error event:`, event);
-    if (element.src === item.meta?.originalSrc) {
-      console.debug(`[Reddit-Gallery] attempting to use thumbnail or default.png`);
-      element.src = item.meta?.thumbnail || browser.runtime.getURL("default.png");
-    }
+
+    fetchImageManually(element, item);
   };
+
+  // if (element.src.includes('i.redd.it') || element.src.includes('i.imgur.com')) {
+  //   fetchImage(element, item);
+  // }
 }
 
 function dupeImg(img: HTMLImageElement) {
